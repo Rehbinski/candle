@@ -12,7 +12,6 @@ if __name__ == "__main__":
 # Wird Nachricht benötigt???
     prio = 0                                            # Priorität festlegen
 
-
 #Connection aufbauen
     connection=_bind()                                  # Verbindung zu Rabbitmq
     channel = connection.channel()                      # Channel erzeugen
@@ -20,10 +19,8 @@ if __name__ == "__main__":
     channel.exchange_declare(exchange=exchange,         # Exchange erstellen
                              type=type)
 
-
 #Retry NAchricht senden
     _retrymessage(channel,200,exchange,severity,message,prio)
-
 
 #Connection beenden
     connection.close()
