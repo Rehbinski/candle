@@ -1,45 +1,28 @@
 from pika_funktion.function_Client import _bind
 from pika_funktion.function_Client import _retrymessage
-#from pika_funktion.globale_Variable import *
 
 if __name__ == "__main__":
 
-    queue = 'test'
-    exchange = 'direct_logs'
-    type = 'direct'
-    severities = ['error', 'info', 'warning']
+# Variablen für Nachricht belegen senden topic
+    queue = 'blubb'                                     # Zu welcher Warteschlange dann gerutet werden soll
+    severity = 'test.critical'                          # Nach welchen Kritereien zu Warteschlange geroutet wird
+    exchange = 'topic_logs'                             # Wie man mag
+    type = 'topic'                                      # Type auf welche Art der Worker hört
+    message = 'Hello World'                             # Nachricht zum senden erzeugen
+# Wird Nachricht benötigt???
+    prio = 0                                            # Priorität festlegen
 
-    severity = 'error'
-    message = 'Hello World'
-    prio = 0
 
 #Connection aufbauen
-    connection=_bind()
-    channel = connection.channel()
-    channel.queue_declare(queue=queue, durable=True)
-    channel.exchange_declare(exchange=exchange,
+    connection=_bind()                                  # Verbindung zu Rabbitmq
+    channel = connection.channel()                      # Channel erzeugen
+    channel.queue_declare(queue=queue, durable=True)    # Warteschlange erstellen
+    channel.exchange_declare(exchange=exchange,         # Exchange erstellen
                              type=type)
 
-#Nachrichten senden direct
-#    _message(channel,1,exchange,severity,message)
-
-# Nachrichten senden topic
-
-    queue='blubb'
-    exchange='topic_logs'
-    severity = 'test.critical'
-    type = 'topic'
-    channel.exchange_declare(exchange=exchange, type=type)
-    
-#    _message(channel, 1, exchange, routing_key, message)
-
-# Nachrichten senden queue
-#    channel.queue_declare(queue='test', durable=True)
-#    _message(channel,1,exchange,severity,message)
-###
 
 #Retry NAchricht senden
-    _retrymessage(channel,200000,exchange,severity,message,prio)
+    _retrymessage(channel,200,exchange,severity,message,prio)
 
 
 #Connection beenden

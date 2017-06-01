@@ -1,20 +1,7 @@
-
-
 import time
 import pika
 import datetime
 import json
-
-
-def _message(channel,anzahl, exchange, severity, message):
-    for i in range(anzahl):
-        tmpmessage = message + str(i)
-        channel.basic_publish(exchange=exchange,
-                              routing_key=severity,
-                              body=tmpmessage)
-        print(" [x] Sent %r:%r" % (severity, tmpmessage))
-
-
 
 
 def _retrymessage(channel,anzahl,exchange,severity,message,prio):
@@ -78,24 +65,3 @@ def _bind():
                 reconnect_interval = reconnect_interval * 2
             print(reconnect_interval)
             time.sleep(reconnect_interval)
-
-
-
-
-
-#only for test
-if __name__ == "__main__":
-    rmq_server = None
-    queue='test'
-    connection=_bind()
-    channel = connection.channel()
-    channel.queue_declare(queue='test', durable=True)
-    severity='error'
-    for i in range(1):
-        message = '0-Hello World!' + str(i)
-        channel.basic_publish(exchange='direct_logs',
-                              routing_key=severity,
-                              body=message)
-        print(" [x] Sent %r:%r" % (severity, message))
-
-    connection.close()
