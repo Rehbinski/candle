@@ -8,3 +8,4 @@ print('JAAAAAA')
 
 
 print('a')
+print('a')
