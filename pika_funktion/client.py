@@ -20,7 +20,7 @@ if __name__ == "__main__":
                              type=type)
 
 #Retry NAchricht senden
-    _retrymessage(channel,200,exchange,severity,message,prio)
+    _retrymessage(channel,2,exchange,severity,message,prio)
 
 #Connection beenden
     connection.close()
