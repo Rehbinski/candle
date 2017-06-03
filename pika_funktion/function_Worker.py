@@ -21,6 +21,18 @@ def queue_count(channel,queuetmp):
     )
     print("Anzahl an verbleibenden Aufgaben: " + str(result.method.message_count))
 
+def get_criterias(exchange):
+    from pyrabbit.api import Client
+    username = 'test'
+    password = 'test'
+    cl = Client('192.168.178.7:15672', username, password)
+    queues = [q['name'] for q in cl.get_queues()]
+    exchanges = cl.get_bindings()
+    list=[]
+    for e in exchanges:
+        if e.get('source') == exchange:
+            list.append(e.get('routing_key')+ ' -> ' + e.get('destination') + '\n')
+    return list
 
 
 
@@ -103,10 +115,12 @@ class ConsumerThread_retry(threading.Thread):
                               queue=self.queue,
                               consumer_tag=self.name + '-Worker')
 
-        print(self.name + '\n Queue: \"' + self.queue + '\" \n Kriterien: ' + ', '.join(self.severities)   +  '\n' + ' [*] Waiting for logs. To exit press CTRL+C')
+        list=get_criterias(self.exchange)
+        print(self.name + '\n Queue: \"' + self.queue + '\" \n Kriterien hinzugefügt: ' + ', '.join(self.severities) + '\n Kiterien von Exchange "' + self.exchange + '":\n ' +
+        ' '.join(list) + ' [*] Waiting for logs. To exit press CTRL+C' + '\n')
+
+
         self.channel.start_consuming()
-
-
 
     def stop(self):
         print ("Trying to stop thread ")
