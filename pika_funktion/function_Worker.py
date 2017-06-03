@@ -103,7 +103,7 @@ class ConsumerThread_retry(threading.Thread):
                               queue=self.queue,
                               consumer_tag=self.name + '-Worker')
 
-        print(self.name + ' [*] Waiting for logs. To exit press CTRL+C')
+        print(self.name + '\n Queue: \"' + self.queue + '\" \n Kriterien: ' + ', '.join(self.severities)   +  '\n' + ' [*] Waiting for logs. To exit press CTRL+C')
         self.channel.start_consuming()
 
 
