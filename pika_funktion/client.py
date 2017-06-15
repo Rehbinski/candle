@@ -1,5 +1,5 @@
-from pika_funktion.function_Client import _bind
-from pika_funktion.function_Client import _retrymessage
+from .function_Client import _bind
+from .function_Client import _retrymessage
 
 if __name__ == "__main__":
 

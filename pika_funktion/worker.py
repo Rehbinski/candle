@@ -1,9 +1,11 @@
 import sys
+import sys
+sys.path.append("/home/work/NAS/Pythoncode/candle")
 if r'C:\Users\root\PycharmProjects\candle' not in sys.path:
     sys.path.append(r'C:\Users\root\PycharmProjects\candle')
     print('Add')
 
-from pika_funktion.function_Worker import ConsumerThread_retry
+from .function_Worker import ConsumerThread_retry
 import time
 
 
