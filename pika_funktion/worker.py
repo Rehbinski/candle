@@ -1,11 +1,18 @@
+import os
 import sys
-import sys
-sys.path.append("/home/work/NAS/Pythoncode/candle")
-if r'C:\Users\root\PycharmProjects\candle' not in sys.path:
-    sys.path.append(r'C:\Users\root\PycharmProjects\candle')
-    print('Add')
 
-from .function_Worker import ConsumerThread_retry
+
+import sys
+import os
+import sys, importlib
+from pathlib import Path
+
+#__path__=[os.path.dirname(os.path.abspath(__file__))]
+#from .function_Worker import ConsumerThread_retry
+
+
+from pika_funktion.function_Worker import ConsumerThread_retry
+
 import time
 
 
@@ -21,6 +28,7 @@ if __name__ == "__main__":
     threads = []
     for i in range(1):
         t = ConsumerThread_retry(queue, exchange, type, severities, 3)
+        t.demon=True
         threads.append(t)
 
     queue = 'test'  # Zu welcher Warteschlange dann gerutet werden soll
@@ -30,6 +38,7 @@ if __name__ == "__main__":
 
     for i in range(1):
         t = ConsumerThread_retry(queue, exchange, type, severities, 3)
+        t.demon=True
         threads.append(t)
 
 
@@ -47,6 +56,8 @@ if __name__ == "__main__":
             time.sleep(1)
         except KeyboardInterrupt:
             print ("Ctrl-c received! Sending kill to threads TODO...")
+            break
             #for thread in threads:
             #    thread.stop()
             #    threads.remove(thread)
+    print(1)

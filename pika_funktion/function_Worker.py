@@ -6,8 +6,9 @@ import threading
 import time
 
 import pika
+from pyrabbit.api import Client
 
-from pika_funktion.function_Client import _bind
+from pika_funktion.function_Worker import *
 
 
 
@@ -22,7 +23,6 @@ def queue_count(channel,queuetmp):
     print("Anzahl an verbleibenden Aufgaben: " + str(result.method.message_count))
 
 def get_criterias(exchange):
-    from pyrabbit.api import Client
     username = 'test'
     password = 'test'
     cl = Client('192.168.178.7:15672', username, password)
@@ -66,7 +66,7 @@ class ConsumerThread_retry(threading.Thread):
         #print("{} received '{}' '{}'".format(self.name, 'Anfang',body.decode("utf-8")))
         #Daten anzeigen und daten in varaible laden
         #print (properties.headers.get('hello'))
-        data = json.loads(body)
+        data = json.loads(body.decode("utf-8"))
         #print ("[>] Received '%s' (try: %d)" % (data.get('keyword'), 1 + int(properties.priority)))
 
         if properties.priority >= self.max_retries - 1: # example handling retries
