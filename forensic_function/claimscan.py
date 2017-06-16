@@ -17,8 +17,8 @@ def comandListSudo(command):
     return comandList(command)
 
 def clamscan(directory):
-
-    pfad = directory + '/clamscan'
+    comandName = 'clamscan'
+    pfad = directory + '/' + comandName
 
     # Startzzeitpunkt festhalten
     start = time.strftime("%d.%m.%Y %H:%M:%S")
@@ -29,18 +29,18 @@ def clamscan(directory):
         os.makedirs(pfad)
 
     #Beginn beschritten
-    fh = open(os.path.join(pfad+'/clamscan_Info.txt'), 'a')
-    fh.writelines('Beginn der Funktion clamscan: ' + start + '\n')
+    fh = open(os.path.join(pfad+'/' + comandName + '_Info.txt'), 'a')
+    fh.writelines('Beginn der Funktion '+ comandName +': ' + start + '\n')
 
     #Version festlegen
-    version = comandList('clamscan -V')
+    version = comandList(comandName + ' -V')
     fh.write('Aktuelle Version: ')
     fh.writelines(version )
     fh.write('\n')
 
     #Befehl ausfuehren
     #clamscan /home/work/NAS/Kunde/usb -r -i --copy=/home/work/NAS/Kunde/clamscan
-    command = 'clamscan ' + directory + '/usb' + ' -r -i --copy='  +  pfad
+    command = comandName + directory + '/usb' + ' -r -i --copy='  +  pfad
     list = comandListSudo(command)
 
     #Ergebnis dokumentieren
