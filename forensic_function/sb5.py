@@ -5,6 +5,18 @@ import os
 
 sudo_command = 'echo password | sudo -S '
 
+def comandList(command):
+    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    list=[]
+    for i in (sudo.stdout):
+        str = i.decode('UTF-8')
+        list.append(str)
+    return list
+
+def comandListSudo(command):
+    command = 'echo password | sudo -S ' + command
+    return comandList(command)
+
 def get_directory():
     global disk
     device_list = get_partition()
@@ -25,12 +37,8 @@ def get_partition():
 def checksum(directory):
     global sudo_command
     command = sudo_command + "md5sum " + directory
-
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
-
-    for i in (sudo.stdout):
-        str=i.decode('UTF-8').split()
-        return str[0]
+    list= comandList(command)
+    return list[0]
 
 def ewfacquire(destination, target):
     global sudo_command

@@ -21,43 +21,24 @@ def comandListSudo(command):
     return comandList(command)
 
 def ewfmount(directory):
-
     pfad=directory+'/mount'
     image= directory + '/image/image.E01'
     #Ordner erstellen
     if not os.path.exists(directory):
         os.makedirs(directory)
     #ewfmount /home/work/NAS/Kunde/image/image.E01 /home/work/NAS/Kunde/mount
-    #ewfmount /home/work/NAS/Kunde/mount/image/image.E01 /home/work/NAS/Kunde/mount/
     command = "ewfmount " + image + ' ' + pfad
-    command = 'echo password | sudo -S ' + command
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
-
-    for i in (sudo.stdout):
-        a=i.decode('UTF-8')
-        print(a)
-        #return a[0]
-        #print (i.decode("UTF-8"))
-
-
+    comandListSudo(command)
 
 def umount(directory):
-
     command = 'echo password | sudo -S ' + "umount " + directory
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
-
-    for i in (sudo.stdout):
-        a=i.decode('UTF-8')
-        print(a)
-
+    comandList(command)
 
 def mmls(directory):
+    path = directory+ '/mount/ewf1'
 
-    #Ordner erstellen
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    command = "mmls " + directory
+    command = "mmls " + path
+    command = 'echo password | sudo -S ' + command
     sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
 
     for i in (sudo.stdout):
@@ -73,7 +54,7 @@ def mmls(directory):
 
 def losetup(directory, target):
     #sudo losetup -o16384 -r /dev/loop0 /mnt/ewf/ewf1
-    directory =directory+ '/mount'
+    path =directory + '/mount'
     #Ordner erstellen
     #if not os.path.exists(directory):
     #    os.makedirs(directory)
@@ -81,7 +62,8 @@ def losetup(directory, target):
 
     #losetup -o16384 -r /dev/Kunde /home/work/NAS/Kunde/mount/ewf1
     offset = '16384'
-    command = "losetup -o" + offset +' -r '+ target + ' ' + directory + '/ewf1'
+    offset = mmls(directory)
+    command = "losetup -o" + str(offset) +' -r '+ target + ' ' + path + '/ewf1'
     command = 'echo password | sudo -S ' + command
     sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
 

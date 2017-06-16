@@ -18,10 +18,11 @@ def comandListSudo(command):
 
 def clamscan(directory):
 
+    pfad = directory + '/clamscan'
+
     # Startzzeitpunkt festhalten
     start = time.strftime("%d.%m.%Y %H:%M:%S")
     #pfad =  directory.rsplit('/', 1)[0]
-    pfad = directory + '/clamscan'
 
     #Ordner anlegen
     if not os.path.exists(pfad):
@@ -43,7 +44,7 @@ def clamscan(directory):
     list = comandListSudo(command)
 
     #Ergebnis dokumentieren
-    fh.writelines('Dies ist ein Test Enddatum:' + time.strftime("%d.%m.%Y %H:%M:%S") + '\n')
+    fh.writelines('Dies ist ein Test Enddatum:' + time.strftime("%d.%m.%Y %H:%M:%S") + '\n\n')
     fh.writelines(list)
     fh.close
 
