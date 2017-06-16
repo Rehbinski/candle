@@ -1,24 +1,10 @@
 import subprocess
 import re
 import os
+import time
 
-def comandList(command):
-    #command = 'mount -V'
-    #command = 'ewfmount -V'
-    #command = 'mmls -V'
-    #command = 'mount -V'
-    #command = 'mount -V'
+from forensic_function.global_function import *
 
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
-    list=[]
-    for i in (sudo.stdout):
-        str = i.decode('UTF-8')
-        list.append(str)
-    return list
-
-def comandListSudo(command):
-    command = 'echo password | sudo -S ' + command
-    return comandList(command)
 
 def ewfmount(directory):
     pfad=directory+'/mount'

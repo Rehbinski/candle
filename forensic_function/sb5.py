@@ -2,20 +2,9 @@ import subprocess
 import psutil
 import re
 import os
+import time
 
-sudo_command = 'echo password | sudo -S '
-
-def comandList(command):
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
-    list=[]
-    for i in (sudo.stdout):
-        str = i.decode('UTF-8')
-        list.append(str)
-    return list
-
-def comandListSudo(command):
-    command = 'echo password | sudo -S ' + command
-    return comandList(command)
+from forensic_function.global_function import *
 
 def get_directory():
     global disk
@@ -35,25 +24,24 @@ def get_partition():
     return list
 
 def checksum(directory):
-    global sudo_command
-    command = sudo_command + "md5sum " + directory
-    list= comandList(command)
+    command =  "md5sum " + directory
+    list= comandListSudo(command)
     return list[0]
 
-def ewfacquire(destination, target):
+def ewfacquire(destination, directory):
     global sudo_command
-    #success = False
-    command = sudo_command + 'sudo ewfacquire '+ destination + ' -t ' + target + '/image' + ' -u'
+    target = directory + '/image'
+    command = 'ewfacquire ' + destination + ' -t ' + target + '/image' + ' -u'
 
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    #sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    list = commandListSudoDokumentation(command,directory)
 
-    for i in (sudo.stdout):
-        str = i.decode("UTF-8")
+    for i in list:
+        str = i         #.decode("UTF-8")
         #if str.find('SUCCESS') > 0:
         #    success = True
         if str.find('calculated') > 0:
             checksum = str.rsplit(None, 1)[-1]
-        print (str)
     return checksum
 
 def copy_disk(pfad):
@@ -71,7 +59,7 @@ def copy_disk(pfad):
         i = i - 1
         hash_checksum = checksum(directory)
         print('Hashsum md5sum:' + hash_checksum)
-        hashsum = (ewfacquire(directory, target))
+        hashsum = (ewfacquire(directory, pfad))
         print('Hashsum ewfacquire:' + hashsum)
         print('Hashsum md5sum:' + hash_checksum)
 
