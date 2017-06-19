@@ -18,7 +18,7 @@ if __name__ == "__main__":
     type = 'topic'  # Type auf welche Art der Worker hört
 
     for i in range(1):
-        t = ConsumerThread_retry(queue, exchange, type, severities, 3)
+        t = ConsumerThread_retry(queue, exchange, type, severities, 3, copy_disk())
         t.demon=True
         threads.append(t)
 

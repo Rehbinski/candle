@@ -10,8 +10,8 @@ from pathlib import Path
 #__path__=[os.path.dirname(os.path.abspath(__file__))]
 #from .function_Worker import ConsumerThread_retry
 
-def printer():
-    print('So sollte es doch sein oder etwa nicht????')
+def printer(pfad):
+    print('So sollte es doch sein oder etwa nicht????\n' + pfad)
 
 
 from pika_funktion.function_Worker import ConsumerThread_retry

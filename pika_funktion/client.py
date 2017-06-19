@@ -8,6 +8,7 @@ if __name__ == "__main__":
     exchange = 'topic_logs'                             # Wie man mag
     type = 'topic'                                      # Type auf welche Art der Worker hört
     message = 'Hello World'                             # Nachricht zum senden erzeugen
+    directory = '/home/work/NAS/Kunde'                  # Pfad angabe
 # Wird Nachricht benötigt???
     prio = 0                                            # Priorität festlegen
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
                              type=type)
 
 #Retry NAchricht senden
-    _retrymessage(channel,2,exchange,severity,message,prio)
+    _retrymessage(channel,2,exchange,severity,message,directory,prio)
 
 #Connection beenden
     connection.close()

@@ -4,7 +4,7 @@ import datetime
 import json
 
 
-def _retrymessage(channel,anzahl,exchange,severity,message,prio):
+def _retrymessage(channel,anzahl,exchange,severity,message,directory,prio):
     for i in range(anzahl):
         timestamp = time.time()
         now = datetime.datetime.now()
@@ -18,6 +18,7 @@ def _retrymessage(channel,anzahl,exchange,severity,message,prio):
             'domain': 'Windows',
             'count': i,
             'message': message,
+            'directory' : directory,
             'created': int(timestamp),
             'expire': expire
         }
