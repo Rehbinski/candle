@@ -11,7 +11,7 @@ def comandList(command):
         str = i.decode('UTF-8')
         list.append(str)
         #Zum Debugen print anmachen
-        #print(str)
+        print(str)
     return list
 
 def comandListSudo(command):
@@ -33,14 +33,14 @@ def commandListSudoDokumentation(command, directory):
     fh.writelines('Beginn der Funktion ' + commandName + ': ' + start + '\n')
     # Version festlegen
     version = comandList(commandName + ' -V')
-    fh.write('Aktuelle Version: ')
-    fh.writelines(version)
-    fh.write('\n')
     # Befehl ausfuehren
     list = comandListSudo(command)
     # Ergebnis dokumentieren
-    fh.writelines('Dies ist ein Test Enddatum:' + time.strftime("%d.%m.%Y %H:%M:%S") + '\n\n')
+    fh.write('Ende der Funktion ' + commandName + ': ' + time.strftime("%d.%m.%Y %H:%M:%S") + '\n')
+    fh.write('Aktuelle Version: ')
+    fh.writelines(version)
+    fh.write('\n\n')
     fh.writelines(list)
-    fh.write('---------------------- END PROGRAMM ----------------------')
+    fh.write('---------------------- END PROGRAMM ----------------------\n\n')
     fh.close
     return list
