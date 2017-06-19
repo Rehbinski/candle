@@ -4,17 +4,22 @@ import os
 import time
 
 from forensic_function.global_function import *
-
+# 3 mal austauschen
 
 def ewfmount(directory):
     pfad=directory+'/mount'
     image= directory + '/image/image.E01'
     #Ordner erstellen
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    if not (os.path.exists(pfad) or os.path.isfile(image)):
+        os.makedirs(pfad)
+    #Ordner erstellen
+    #if not os.path.exists(directory):
+    #    os.makedirs(directory)
     #ewfmount /home/work/NAS/Kunde/image/image.E01 /home/work/NAS/Kunde/mount
     command = "ewfmount " + image + ' ' + pfad
-    comandListSudo(command)
+    #comandListSudo(command)
+    list = commandListSudoDokumentation(command,directory)
+
 
 def umount(directory):
     command = 'echo password | sudo -S ' + "umount " + directory
@@ -24,18 +29,19 @@ def mmls(directory):
     path = directory+ '/mount/ewf1'
 
     command = "mmls " + path
-    command = 'echo password | sudo -S ' + command
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    #command = 'echo password | sudo -S ' + command
+    #sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    list = commandListSudoDokumentation(command,directory)
 
-    for i in (sudo.stdout):
-        str = i.decode('UTF-8')
-        print(str)
+    for i in (list):
+        #str = i.decode('UTF-8')
+        str = i
+        #print(str)
         if str.find('NTFS') > 0:
             start = int(str.split()[2])
         if str.find('sectors') > 0:
             sector = int(re.findall('\d+', str)[0])
             # Anstossen von naesten arbeiter uebergabe von Start mal sector
-    print('hab')
     return sector * start
 
 def losetup(directory, target):
@@ -47,15 +53,13 @@ def losetup(directory, target):
 
 
     #losetup -o16384 -r /dev/Kunde /home/work/NAS/Kunde/mount/ewf1
-    offset = '16384'
+    #offset = '16384'
     offset = mmls(directory)
     command = "losetup -o" + str(offset) +' -r '+ target + ' ' + path + '/ewf1'
-    command = 'echo password | sudo -S ' + command
-    sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    #command = 'echo password | sudo -S ' + command
+    #sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
+    list = commandListSudoDokumentation(command,directory)
 
-    for i in (sudo.stdout):
-        a=i.decode('UTF-8')
-        print(a)
 
 def unmount_losetup(directory):
     #losetup -d / dev/loop0
