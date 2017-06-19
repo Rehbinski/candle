@@ -10,6 +10,9 @@ from pathlib import Path
 #__path__=[os.path.dirname(os.path.abspath(__file__))]
 #from .function_Worker import ConsumerThread_retry
 
+def printer():
+    print('So sollte es doch sein oder etwa nicht????')
+
 
 from pika_funktion.function_Worker import ConsumerThread_retry
 
@@ -27,7 +30,7 @@ if __name__ == "__main__":
 
     threads = []
     for i in range(1):
-        t = ConsumerThread_retry(queue, exchange, type, severities, 3)
+        t = ConsumerThread_retry(queue, exchange, type, severities, 3, printer)
         t.demon=True
         threads.append(t)
 
@@ -37,7 +40,7 @@ if __name__ == "__main__":
     type = 'direct'  # Type auf welche Art der Worker hört
 
     for i in range(1):
-        t = ConsumerThread_retry(queue, exchange, type, severities, 3)
+        t = ConsumerThread_retry(queue, exchange, type, severities, 3, printer)
         t.demon=True
         threads.append(t)
 

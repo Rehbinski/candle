@@ -39,7 +39,7 @@ def get_criterias(exchange):
 class ConsumerThread_retry(threading.Thread):
 
 
-    def __init__(self, queue, exchange, type, severities, max_retries, *args, **kwargs):
+    def __init__(self, queue, exchange, type, severities, max_retries, mainfunction, *args, **kwargs):
         super(ConsumerThread_retry, self).__init__(*args, **kwargs)
         self.queue = queue
         self.test = True
@@ -48,7 +48,7 @@ class ConsumerThread_retry(threading.Thread):
         self.severities = severities
         self.max_retries = max_retries
         self.connection = pika.BlockingConnection(pika.URLParameters('amqp://myuser:mypassword@192.168.178.7:5672/myvhost'))
-
+        self.mainfunction = mainfunction
         self.channel = self.connection.channel()
 
         try:
@@ -78,6 +78,7 @@ class ConsumerThread_retry(threading.Thread):
                 #queue_count(self.channel,self.queue)
                 ch.basic_ack(delivery_tag=method.delivery_tag)
                 #DOSOMETHING HIERE!!!!!!!!
+                self.mainfunction()
                 print (self.name+"[+] Done")
             except:
                 timestamp = time.time()
