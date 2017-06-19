@@ -10,6 +10,8 @@ def comandList(command):
     for i in (sudo.stdout):
         str = i.decode('UTF-8')
         list.append(str)
+        #Zum Debugen print anmachen
+        #print(str)
     return list
 
 def comandListSudo(command):
