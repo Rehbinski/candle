@@ -44,9 +44,10 @@ def mmls(directory):
             # Anstossen von naesten arbeiter uebergabe von Start mal sector
     return sector * start
 
-def losetup(directory, target):
+def losetup(directory):
     #sudo losetup -o16384 -r /dev/loop0 /mnt/ewf/ewf1
     path =directory + '/mount'
+    target = '/dev/loop0'
     #Ordner erstellen
     #if not os.path.exists(directory):
     #    os.makedirs(directory)
@@ -71,9 +72,10 @@ def unmount_losetup(directory):
         a=i.decode('UTF-8')
         print(a)
 
-def mount(directory, target):
+def mount(directory):
     #sudo mount /dev/loop0 /mnt/usb -o loop,ro,show_sys_files
     directory = directory + '/usb'
+    target = '/dev/loop0'
 
     #Ordner erstellen
     if not os.path.exists(directory):
@@ -102,10 +104,10 @@ if __name__ == "__main__" :
         #offset = mmls(directory+'ewf1')
 
         #sudo losetup -o16384 -r /dev/loop0 /mnt/ewf/ewf1
-        losetup(directory,target)
+        losetup(directory)
 
         #sudo mount /dev/loop0 /mnt/usb -o loop,ro,show_sys_files
-        mount(directory, target)
+        mount(directory)
 
 #unmounten
     if i ==1 :
