@@ -40,7 +40,7 @@ if __name__ == "__main__":
     queue = 'clamscannDisk'  # Zu welcher Warteschlange dann gerutet werden soll
     severities = ['Linux.clamscannDisk.*']  # Nach welchen Kritereien zu Warteschlange geroutet wird
 #TODO clamcannDisk ist eine Funktion ander betiteln
-    for i in range(1):
+    for i in range(2):
         t = ConsumerThread_retry(queue, exchange, type, severities, 3, clamscanDisk)
         t.daemon = True
         threads.append(t)
@@ -50,7 +50,6 @@ if __name__ == "__main__":
  # Alle Arbeiter Anstossen
     for thread in threads:
         thread.start()
-
 
 
 

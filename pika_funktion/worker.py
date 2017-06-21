@@ -58,6 +58,7 @@ if __name__ == "__main__":
         try:
             time.sleep(1)
         except KeyboardInterrupt:
+
             print ("Ctrl-c received! Sending kill to threads TODO...")
             break
             #for thread in threads:

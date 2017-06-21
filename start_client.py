@@ -23,7 +23,7 @@ if __name__ == "__main__":
 # Variablen für Nachricht belegen senden topic
 # Erster Arbeiter - copy Disk
     severity = 'Linux.Copydisk.*'                       # Nach welchen Kritereien zu Warteschlange geroutet wird
-    severity = 'Linux.clamscannDisk.*'#Tes
+    severity = 'Linux.clamscannDisk.*'                  #Fuer Testzwecke angelegt
     exchange = 'topic_logs'                             # Wie man mag
     type = 'topic'                                      # Type auf welche Art der Worker hört
     message = 'Nachricht fuer jedermann'                # Nachricht zum senden erzeugen

@@ -102,16 +102,10 @@ class ConsumerThread_retry(threading.Thread):
                 time.sleep(10)
 
     def run(self):
-        if self.test == False:
-            self.channel.stop_consuming()
-            self.connection.close()
-            return True
-
         for severity in self.severities:
             self.channel.queue_bind(exchange=self.exchange,
                                queue=self.queue,
                                routing_key=severity)
-        self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(self.callback_func,
                               queue=self.queue,
                               consumer_tag=self.name + '-Worker')
@@ -120,8 +114,11 @@ class ConsumerThread_retry(threading.Thread):
         print(self.name + '\n Queue: \"' + self.queue + '\" \n Kriterien hinzugefügt: ' + ', '.join(self.severities) + '\n Kiterien von Exchange "' + self.exchange + '":\n ' +
         ' '.join(list) + ' [*] Waiting for logs. To exit press CTRL+C' + '\n')
 
+        try:
+            self.channel.start_consuming()
+        except:
+            print(1)
 
-        self.channel.start_consuming()
 
     def stop(self):
         print ("Trying to stop thread ")

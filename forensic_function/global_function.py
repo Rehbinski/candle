@@ -28,14 +28,15 @@ def commandListSudoDokumentation(command, directory):
     if not os.path.exists(pfad):
         os.makedirs(pfad)
 
-    # Beginn beschritten
-    fh = open(os.path.join(pfad + '/' + commandName + '_Info.txt'), 'a')
-    fh.writelines('Beginn der Funktion ' + commandName + ': ' + start + '\n')
+
     # Version festlegen
     version = comandList(commandName + ' -V')
     # Befehl ausfuehren
     list = comandListSudo(command)
     # Ergebnis dokumentieren
+    # Beginn beschritten
+    fh = open(os.path.join(pfad + '/' + commandName + '_Info.txt'), 'a')
+    fh.write('Beginn der Funktion ' + commandName + ': ' + start + '\n')
     fh.write('Ende der Funktion ' + commandName + ': ' + time.strftime("%d.%m.%Y %H:%M:%S") + '\n')
     fh.write('Aktuelle Version: ')
     fh.writelines(version)
