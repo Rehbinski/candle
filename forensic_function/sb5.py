@@ -4,6 +4,7 @@ import re
 import os
 import time
 
+from start_client import sendMessage
 from forensic_function.global_function import *
 
 def get_directory():
@@ -21,6 +22,7 @@ def get_partition():
         info_device = i[0].split('/')
         device = info_device[2][0:3]
         list.append(device)
+        #TODO Ueberpruefen ob hier Code eingeuegt wird zum weiteren uebergeben
     return list
 
 def checksum(directory):
@@ -44,7 +46,8 @@ def ewfacquire(destination, directory):
             checksum = str.rsplit(None, 1)[-1]
     return checksum
 
-def copy_disk(pfad):
+def copyDisk(pfad):
+    print('erster Schritt begonnen')
     #Anzahl an durchlaeufen
     i=1
     directory = get_directory()
@@ -66,12 +69,22 @@ def copy_disk(pfad):
         if checksum == hash_checksum:
             print('erfolgreich')
             break
+    print('erster Schritt fertig')
+
+    severity = 'Linux.MountDisk.*'  # Nach welchen Kritereien zu Warteschlange geroutet wird
+    exchange = 'topic_logs'  # Wie man mag
+    type = 'topic'  # Type auf welche Art der Worker hört
+    message = 'Nachricht fuer jedermann'  # Nachricht zum senden erzeugen
+    directory = '/home/work/NAS/Kunde'
+    # Wird Nachricht benötigt???
+    prio = 0  # Priorität festlegen
+    sendMessage(exchange, severity, message, directory, prio, type)
 
 
 if __name__ == "__main__" :
     target = '/home/work/NAS/Kunde'
     # Ziel noch errechnen
-    copy_disk(target)
+    copyDisk(target)
     print('erster Schritt fertig')
 
 
