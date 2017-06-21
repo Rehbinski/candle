@@ -42,7 +42,7 @@ if __name__ == "__main__":
     for i in range(1):
         t = ConsumerThread_retry(queue, exchange, type, severities, 3, printer)
         t.demon=True
-        threads.append(t)
+        #threads.append(t)
 
 
     for thread in threads:

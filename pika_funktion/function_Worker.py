@@ -111,7 +111,7 @@ class ConsumerThread_retry(threading.Thread):
             self.channel.queue_bind(exchange=self.exchange,
                                queue=self.queue,
                                routing_key=severity)
-
+        self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(self.callback_func,
                               queue=self.queue,
                               consumer_tag=self.name + '-Worker')
@@ -127,5 +127,10 @@ class ConsumerThread_retry(threading.Thread):
         print ("Trying to stop thread ")
         print(self.name + 'Ende')
         self.test = False
-        self.run()
+        #self.channel.stop_consuming()
+        try:
+            self.connection.close()
+            self.connection.ioloop.start()
+        except:
+            print('error')
         print('b')
