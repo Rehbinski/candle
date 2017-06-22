@@ -3,6 +3,9 @@
 import logging
 import threading
 import sys
+import json
+import time
+import datetime
 
 import pika
 from forensic_function.claimscan import clamscanDisk
@@ -19,7 +22,7 @@ class ExampleConsumer(threading.Thread):
 
 
 
-    def __init__(self, QUEUE, ROUTING_KEY):
+    def __init__(self, MAX_RETRIES, QUEUE, ROUTING_KEY, MAINFUNCTION):
         """Create a new instance of the consumer class, passing in the AMQP
         URL used to connect to RabbitMQ.
     
@@ -33,7 +36,12 @@ class ExampleConsumer(threading.Thread):
         self._consumer_tag = None
         self._url = 'amqp://myuser:mypassword@192.168.178.7:5672/myvhost'
         self.QUEUE = QUEUE
-        self.ROUTING_KEY = ROUTING_KEY
+        self.ROUTING_KEY = ROUTING_KEY                                      # Eventuell liste uebergeben
+        self.MAINFUNCTION = MAINFUNCTION
+        self.MAX_RETRIES = MAX_RETRIES
+
+        #Zugabe
+        #self.severities = severities
 
     def connect(self):
         """This method connects to RabbitMQ, returning the connection handle.
@@ -62,7 +70,7 @@ class ExampleConsumer(threading.Thread):
 
     def add_on_connection_close_callback(self):
         """This method adds an on close callback that will be invoked by pika
-        when RabbitMQ closes the connection to the publisher unexpectedly.
+        when RabbitMQ +closes the connection to the publisher unexpectedly.
 
         """
         LOGGER.info('Adding connection close callback')
@@ -195,8 +203,10 @@ class ExampleConsumer(threading.Thread):
         """
         LOGGER.info('Binding %s to %s with %s',
                     self.EXCHANGE, self.QUEUE, self.ROUTING_KEY)
-        self._channel.queue_bind(self.on_bindok, self.QUEUE,
-                                 self.EXCHANGE, self.ROUTING_KEY)
+        teile = self.ROUTING_KEY.split('.')
+        for i in range(len(teile)):
+            self._channel.queue_bind(self.on_bindok, self.QUEUE,
+                                 self.EXCHANGE, '.'.join(teile[0:i+1]))
 
     def on_bindok(self, unused_frame):
         """Invoked by pika when the Queue.Bind method has completed. At this
@@ -261,9 +271,38 @@ class ExampleConsumer(threading.Thread):
         """
         LOGGER.info('Received message # %s from %s: %s',
                     basic_deliver.delivery_tag, properties.app_id, body)
-        self.acknowledge_message(basic_deliver.delivery_tag)
-        directory = '/home/work/NAS/Kunde'
-        clamscanDisk(directory)
+        self.acknowledge_message(basic_deliver.delivery_tag)                   # Info das Client message erhalten hat
+
+        data = json.loads(body.decode("utf-8"))
+
+
+        if properties.priority >= self.MAX_RETRIES: # example handling retries
+            print ("[!] '%s' rejected after %d retries" % (data.get('keyword'), 1 + int(properties.priority)))
+        else:
+            try:
+                print(self.name + "[+] Start: " + self.QUEUE)
+                self.MAINFUNCTION(data.get('directory'))
+                print (self.name+"[+] Done: " + self.QUEUE)
+            except:
+                print (self.name+"[+] Fehler: " + self.QUEUE)
+
+                #timestamp = time.time()
+                #now = datetime.datetime.now()
+                #expire = 1000 * int((now.replace(hour=23, minute=59, second=59, microsecond=999999) - now).total_seconds())
+
+                # to reject job we create new one with other priority and expiration
+                self._channel.basic_publish(exchange=self.EXCHANGE,
+                                      routing_key=self.ROUTING_KEY,
+                                      body=json.dumps(data),
+                                      properties=pika.BasicProperties(
+                                          delivery_mode=2,
+                                          priority=int(properties.priority) + 1
+                                          #timestamp=timestamp,
+                                          #expiration=str(expire),
+                                          #headers=properties.headers
+                                           ))
+                print ("[!] Rejected, going to sleep for a while")
+                time.sleep(10)
 
     def acknowledge_message(self, delivery_tag):
         """Acknowledge the message delivery from RabbitMQ by sending a
@@ -338,13 +377,18 @@ class ExampleConsumer(threading.Thread):
         self._connection.close()
 
 
+def printer(hallo):
+    print(11111111111111111)
+    print(hallo)
+    i = 1/0
+
 def main():
-    logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
+    #logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
     threads = []
 
     for i in range(1):
-        t = ExampleConsumer('clamscannDisk','Linux.clamscannDisk.*')
+        t = ExampleConsumer(1,'clamscannDisk','Programme.clamscannDisk.Linux.PC1.thread'+str(i), printer)
         t.demon=True
         threads.append(t)
 
