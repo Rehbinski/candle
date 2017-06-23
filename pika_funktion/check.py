@@ -209,6 +209,7 @@ class Consumer(threading.Thread):
         for i in range(len(teile)):
             self._channel.queue_bind(self.on_bindok, self.QUEUE,
                                  self.EXCHANGE, '.'.join(teile[0:i+1]))
+        self.start_consuming()
 
     def on_bindok(self, unused_frame):
         """Invoked by pika when the Queue.Bind method has completed. At this
@@ -219,7 +220,7 @@ class Consumer(threading.Thread):
 
         """
         LOGGER.info('Queue bound')
-        self.start_consuming()
+        #self.start_consuming()
 
     def start_consuming(self):
         """This method sets up the consumer by first calling
@@ -283,13 +284,12 @@ class Consumer(threading.Thread):
 
             #Nachricht an letzte Thread damit fehler passiert ist
             routing_key = 'Ende'  # Nach welchen Kritereien zu Warteschlange geroutet wird
-            message = 'Nachricht fuer jedermann'  # Nachricht zum senden erzeugen
-            sendMessageTopic(routing_key, message, data.get('directory'))
+            sendMessageTopic(routing_key, data)
 
         else:
             try:
                 print(self.name + "[+] Start: " + self.QUEUE)
-                self.MAINFUNCTION(data.get('directory'))
+                self.MAINFUNCTION(data)
                 #properties.priority = 0
                 print (self.name+"[+] Done: " + self.QUEUE)
             except:
