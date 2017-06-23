@@ -78,7 +78,7 @@ class ConsumerThread_retry(threading.Thread):
                 #queue_count(self.channel,self.queue)
                 ch.basic_ack(delivery_tag=method.delivery_tag)
                 #DOSOMETHING HIERE!!!!!!!!
-                self.mainfunction(data.get('directory'))
+                self.mainfunction(data)
                 print (self.name+"[+] Done")
             except:
                 timestamp = time.time()
