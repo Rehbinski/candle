@@ -1,5 +1,6 @@
 from pika_funktion.function_Client import _bind
 from pika_funktion.function_Client import _retrymessage
+from global_variable import *
 
 if __name__ == "__main__":
 
@@ -7,8 +8,6 @@ if __name__ == "__main__":
     severity = 'info.Windows'                          # Nach welchen Kritereien zu Warteschlange geroutet wird
     exchange = 'topic_logs'                             # Wie man mag
     type = 'topic'                                      # Type auf welche Art der Worker hört
-    message = 'Hello World'                             # Nachricht zum senden erzeugen
-    directory = '/home/work/NAS/Kunde'                  # Pfad angabe
 # Wird Nachricht benötigt???
     prio = 0                                            # Priorität festlegen
 
@@ -19,7 +18,7 @@ if __name__ == "__main__":
                              type=type)
 
 #Retry NAchricht senden
-    _retrymessage(channel,2,exchange,severity,message,directory,prio)
+    _retrymessage(channel,2,exchange,severity,0,DATA)
 
 #Connection beenden
     connection.close()

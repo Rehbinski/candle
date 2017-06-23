@@ -73,10 +73,10 @@ def copyDisk(data):
             break
     print('erster Schritt fertig')
 
-    routing_key = 'Mount.MountDisk'  # Nach welchen Kritereien zu Warteschlange geroutet wird
-    message = 'Nachricht fuer jedermann'  # Nachricht zum senden erzeugen
-    # Wird Nachricht benötigt???
-    sendMessageTopic(routing_key,message, directory)
+    routing_key = 'Mount.Ewfmount'  # Nach welchen Kritereien zu Warteschlange geroutet wird
+    sendMessageTopic(routing_key,data)
+    sendMessageTopic('Ende',data)
+
 
 
 if __name__ == "__main__" :

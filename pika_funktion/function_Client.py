@@ -4,7 +4,7 @@ import datetime
 import json
 
 
-def _retrymessage(channel,anzahl,exchange,severity,message,directory_root,prio, directory_ewf=None,directory_partion=None, offset=None):
+def _retrymessage(channel,anzahl,exchange,severity,prio, data):
     for i in range(anzahl):
         timestamp = time.time()
         now = datetime.datetime.now()
@@ -15,15 +15,17 @@ def _retrymessage(channel,anzahl,exchange,severity,message,directory_root,prio, 
         }
         data = {  # example hot to transfer objects rather than string using json.dumps and json.loads
             'keyword': 'Wie_geil',
-            'domain': 'Windows',
+            'domain': data.get('Windows'),
             'count': i,
-            'message': message,
-            'directory_ewf' : directory_ewf,
-            'directory_root' : directory_root,
-            'directory_partion' : directory_partion,
-            'offset' : offset,
+            'message': data.get('message'),
+            'directory_ewf' : data.get('directory_root') + '/mount',
+            'directory_root' : data.get('directory_root'),
+            'directory_partion_mount': data.get('directory_partion_mount'),
+            'directory_partion' : data.get('directory_partion'),
+            'offset' : data.get('offset'),
+            'sizelimit' : data.get('sizelimit'),
             'created': int(timestamp),
-            'expire': expire
+            'expire': expire,
         }
         channel.basic_publish(
             exchange=exchange,
@@ -36,7 +38,7 @@ def _retrymessage(channel,anzahl,exchange,severity,message,directory_root,prio, 
                 expiration=str(expire),  # job expiration (milliseconds from now), must be string, handled by rabbitmq
                 headers=headers
             ))
-        print("[>] Sent %r" % message)
+        print("[>] Sent %r" % data.get('message'))
 
 
 def _bind():
