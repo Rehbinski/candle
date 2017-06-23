@@ -4,7 +4,8 @@ import re
 import os
 import time
 
-from start_client import sendMessage
+from global_variable import *
+from start_client import sendMessageTopic
 from forensic_function.global_function import *
 
 def get_directory():
@@ -46,13 +47,14 @@ def ewfacquire(destination, directory):
             checksum = str.rsplit(None, 1)[-1]
     return checksum
 
-def copyDisk(pfad):
+def copyDisk(data):
+    directory = data.get('directory_root')
     print('erster Schritt begonnen')
     #Anzahl an durchlaeufen
     i=1
-    directory = get_directory()
+    pfad = get_directory()
 
-    target = pfad + '/image'
+    target = directory + '/image'
 
     #Ordner anlegen
     if not os.path.exists(target):
@@ -60,9 +62,9 @@ def copyDisk(pfad):
 
     while i != 0:
         i = i - 1
-        hash_checksum = checksum(directory)
+        hash_checksum = checksum(pfad)
         print('Hashsum md5sum:' + hash_checksum)
-        hashsum = (ewfacquire(directory, pfad))
+        hashsum = (ewfacquire(pfad, directory))
         print('Hashsum ewfacquire:' + hashsum)
         print('Hashsum md5sum:' + hash_checksum)
 
@@ -71,20 +73,16 @@ def copyDisk(pfad):
             break
     print('erster Schritt fertig')
 
-    severity = 'Linux.MountDisk.*'  # Nach welchen Kritereien zu Warteschlange geroutet wird
-    exchange = 'topic_logs'  # Wie man mag
-    type = 'topic'  # Type auf welche Art der Worker hört
+    routing_key = 'Mount.MountDisk'  # Nach welchen Kritereien zu Warteschlange geroutet wird
     message = 'Nachricht fuer jedermann'  # Nachricht zum senden erzeugen
-    directory = '/home/work/NAS/Kunde'
     # Wird Nachricht benötigt???
-    prio = 0  # Priorität festlegen
-    sendMessage(exchange, severity, message, directory, prio, type)
+    sendMessageTopic(routing_key,message, directory)
 
 
 if __name__ == "__main__" :
-    target = '/home/work/NAS/Kunde'
     # Ziel noch errechnen
-    copyDisk(target)
+
+    copyDisk(DATA)
     print('erster Schritt fertig')
 
 

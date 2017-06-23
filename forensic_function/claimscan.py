@@ -4,12 +4,14 @@ import subprocess
 import os
 import time
 
-from start_client import sendMessage
+from global_variable import *
+from start_client import sendMessageTopic
 
 
 from forensic_function.global_function import *
 
-def clamscan(directory):
+def clamscan(data):
+    directory = data.get('directory_root')
     commandName = 'clamscan'
     pfad = directory + '/' + commandName
     #clamscan /home/work/NAS/Kunde/usb -r -i --copy=/home/work/NAS/Kunde/clamscan
@@ -22,15 +24,10 @@ def clamscanDisk(directory):
     clamscan(directory)
     print('dritter Schritt fertig')
 
-    severity = 'info.Windows'  # Nach welchen Kritereien zu Warteschlange geroutet wird
-    exchange = 'topic_logs'  # Wie man mag
-    type = 'topic'  # Type auf welche Art der Worker hört
-    message = 'Hello World'  # Nachricht zum senden erzeugen
-    directory = '/home/work/NAS/Kunde'  # Pfad angabe
+    routing_key = 'Ende'  # Nach welchen Kritereien zu Warteschlange geroutet wird
+    message = 'Nachricht fuer jedermann'  # Nachricht zum senden erzeugen
     # Wird Nachricht benötigt???
-    prio = 0  # Priorität festlegen
-
-    sendMessage(exchange, severity, message, directory, prio, type)
+    sendMessageTopic(routing_key, message, directory)
 
 
     print('jaa so gehts')
@@ -40,6 +37,4 @@ def clamscanDisk(directory):
 
 
 if __name__ == "__main__" :
-
-    directory = '/home/work/NAS/Kunde'
-    clamscanDisk(directory)
+    clamscanDisk(DATA)
