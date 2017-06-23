@@ -7,8 +7,10 @@ import json
 import time
 import datetime
 
+
 import pika
 from forensic_function.claimscan import clamscanDisk
+from start_client import sendMessageTopic
 
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
@@ -16,7 +18,7 @@ LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
 LOGGER = logging.getLogger(__name__)
 
 
-class ExampleConsumer(threading.Thread):
+class Consumer(threading.Thread):
     EXCHANGE = 'topic_logs'
     EXCHANGE_TYPE = 'topic'
 
@@ -277,11 +279,18 @@ class ExampleConsumer(threading.Thread):
 
 
         if properties.priority >= self.MAX_RETRIES: # example handling retries
-            print ("[!] '%s' rejected after %d retries" % (data.get('keyword'), 1 + int(properties.priority)))
+            print ("[!] '%s' rejected after %d retries" % (data.get('keyword'), int(properties.priority)))
+
+            #Nachricht an letzte Thread damit fehler passiert ist
+            routing_key = 'Ende'  # Nach welchen Kritereien zu Warteschlange geroutet wird
+            message = 'Nachricht fuer jedermann'  # Nachricht zum senden erzeugen
+            sendMessageTopic(routing_key, message, data.get('directory'))
+
         else:
             try:
                 print(self.name + "[+] Start: " + self.QUEUE)
                 self.MAINFUNCTION(data.get('directory'))
+                #properties.priority = 0
                 print (self.name+"[+] Done: " + self.QUEUE)
             except:
                 print (self.name+"[+] Fehler: " + self.QUEUE)
@@ -380,7 +389,6 @@ class ExampleConsumer(threading.Thread):
 def printer(hallo):
     print(11111111111111111)
     print(hallo)
-    i = 1/0
 
 def main():
     #logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
@@ -388,7 +396,7 @@ def main():
     threads = []
 
     for i in range(1):
-        t = ExampleConsumer(1,'clamscannDisk','Programme.clamscannDisk.Linux.PC1.thread'+str(i), printer)
+        t = Consumer(1, 'clamscannDisk', 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), printer)
         t.demon=True
         threads.append(t)
 

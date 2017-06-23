@@ -1,64 +1,67 @@
-import time
-
 from forensic_function.claimscan import clamscanDisk
 from forensic_function.mmls import mountDisk
 from forensic_function.sb5 import copyDisk
 
 from pika_funktion.function_Worker import ConsumerThread_retry
+from pika_funktion.check import Consumer
+import time
+import sys
+import logging
+from pika_funktion.check import printer
+
+LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
+              '-35s %(lineno) -5d: %(message)s')
+LOGGER = logging.getLogger(__name__)
 
 
-if __name__ == "__main__":
-    # * vor one word
-    # # vor more words
+def main():
+    #logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
     threads = []
-    exchange = 'topic_logs'  # Wie man mag
-    type = 'topic'  # Type auf welche Art der Worker hört
-
-
-
-
 # Erster Arbeiter - copy Disk
-    queue = 'Copydisk'  # Zu welcher Warteschlange dann gerutet werden soll
-    severities = ['Linux.Copydisk.*']  # Nach welchen Kritereien zu Warteschlange geroutet wird
-
 
     for i in range(1):
-        t = ConsumerThread_retry(queue, exchange, type, severities, 3, copyDisk)
-        t.demon=True
+        t = Consumer(1, 'Copydisk', 'Copy.Copydisk.Linux.PC1.thread' + str(i), copyDisk)
+        t.demon = True
         threads.append(t)
 
 # Zweiter Arbeiter - mount Disk
-    queue = 'MountDisk'  # Zu welcher Warteschlange dann gerutet werden soll
-    severities = ['Linux.MountDisk.*']  # Nach welchen Kritereien zu Warteschlange geroutet wird
-
     for i in range(1):
-        t = ConsumerThread_retry(queue, exchange, type, severities, 3, mountDisk)
+        t = Consumer(2, 'MountDisk', 'Mount.MountDisk.Linux.PC1.thread' + str(i), mountDisk)
         t.daemon = True
         threads.append(t)
 
-        # Dritter Arbeiter - mount Disk
-    queue = 'clamscannDisk'  # Zu welcher Warteschlange dann gerutet werden soll
-    severities = ['Linux.clamscannDisk.*']  # Nach welchen Kritereien zu Warteschlange geroutet wird
-#TODO clamcannDisk ist eine Funktion ander betiteln
-    for i in range(2):
-        t = ConsumerThread_retry(queue, exchange, type, severities, 3, clamscanDisk)
+# Dritter Arbeiter - mount Disk
+    for i in range(1):
+        #Queuenamen namen hochzahelen wenn 2 die gleiche arbeit machen sollen
+        #t = Consumer(1, 'clamscannDisk'+str(i), 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
+        #Queuenamen gleich lassen wenn mehrere Anfragen kommen koennen und diese Parallel bearbeitet werden sollen
+        t = Consumer(1, 'clamscannDisk', 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
+
         t.daemon = True
         threads.append(t)
 
+# Ende Arbeiter - mount Disk
+        for i in range(3):
+            t = Consumer(1, 'End'+str(i), 'Ende', printer)
+            t.daemon = True
+            threads.append(t)
 
-
- # Alle Arbeiter Anstossen
     for thread in threads:
         thread.start()
-
-
 
     while len(threads) > 0:
         try:
             time.sleep(1)
         except KeyboardInterrupt:
-            print ("Ctrl-c received! Sending kill to threads TODO...")
             for t in threads:
-                t.stop()
+                try:
+                    t.stop()
+                except:
+                    print('Fehler: ' + str(sys.exc_info()[0]))
             break
-    print('Ende')
+
+
+if __name__ == "__main__":
+    # * vor one word
+    # # vor more words
+    main()
