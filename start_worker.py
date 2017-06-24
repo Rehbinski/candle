@@ -1,6 +1,7 @@
 from forensic_function.claimscan import clamscanDisk
 from forensic_function.mount import mountDisk
 from forensic_function.copyDisk import copyDisk
+from forensic_function.foremost import foremostScan
 
 from pika_funktion.function_Worker import ConsumerThread_retry
 from pika_funktion.check import Consumer
@@ -43,6 +44,11 @@ def main():
         #t = Consumer(1, 'clamscannDisk'+str(i), 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
         #Queuenamen gleich lassen wenn mehrere Anfragen kommen koennen und diese Parallel bearbeitet werden sollen
         t = Consumer(1, 'clamscannDisk', 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
+        t.daemon = True
+        threads.append(t)
+# Fuenfter Arbeiter - mount Disk
+    for i in range(1):
+        t = Consumer(2, 'MountDisk', 'Programme.foremost.Linux.PC1.thread' + str(i), foremostScan)
         t.daemon = True
         threads.append(t)
 

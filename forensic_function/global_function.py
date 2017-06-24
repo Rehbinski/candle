@@ -8,10 +8,21 @@ def comandList(command):
     sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
     list=[]
     for i in (sudo.stdout):
-        str = i.decode('UTF-8')
-        list.append(str)
-        #Zum Debugen print anmachen
-        print(str)
+        try:
+            str = i.decode('UTF-8')
+            list.append(str)
+            #Zum Debugen print anmachen
+            print(str)
+        except:
+            try:
+                str = i.decode('ISO-8859-1')
+                list.append(str)
+                #Zum Debugen print anmachen
+                print(str)
+            except:
+                pass
+
+
     return list
 
 def comandListSudo(command):
