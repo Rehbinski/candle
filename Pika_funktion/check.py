@@ -9,8 +9,8 @@ import datetime
 
 
 import pika
-from forensic_function.claimscan import clamscanDisk
-from start_client import sendMessageTopic
+from Forensic_function.claimscan import clamscanDisk
+from start_client_linux import sendMessageTopic
 
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '

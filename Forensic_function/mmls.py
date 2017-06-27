@@ -3,8 +3,8 @@ import re
 import os
 import time
 
-from start_client import sendMessage
-from forensic_function.global_function import *
+from start_client_linux import sendMessage
+from Forensic_function.global_function import *
 # 3 mal austauschen
 
 def ewfmount(directory):

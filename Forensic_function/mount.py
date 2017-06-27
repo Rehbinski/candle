@@ -4,8 +4,8 @@ import os
 import time
 
 from global_variable import *
-from start_client import sendMessageTopic
-from forensic_function.global_function import *
+from start_client_linux import sendMessageTopic
+from Forensic_function.global_function import *
 
 def mount(data):
     #sudo mount /home/work/NAS/Kunde/mount/ewf1 /home/work/NAS/Kunde/usb -o loop,ro,show_sys_files,offset=1562835456

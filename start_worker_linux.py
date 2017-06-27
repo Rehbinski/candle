@@ -1,15 +1,15 @@
-from forensic_function.claimscan import clamscanDisk
-from forensic_function.mount import mountDisk
-from forensic_function.copyDisk import copyDisk
-from forensic_function.foremost import foremostScan
+from Forensic_function.claimscan import clamscanDisk
+from Forensic_function.mount import mountDisk
+from Forensic_function.copyDisk import copyDisk
+from Forensic_function.foremost import foremostScan
 
-from pika_funktion.function_Worker import ConsumerThread_retry
-from pika_funktion.check import Consumer
+from Pika_funktion.function_Worker import ConsumerThread_retry
+from Pika_funktion.check import Consumer
 import time
 import sys
 import logging
-from pika_funktion.check import printer
-from forensic_function.getPartion import getPartion
+from Pika_funktion.check import printer
+from Forensic_function.getPartion import getPartion
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')

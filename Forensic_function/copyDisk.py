@@ -5,8 +5,8 @@ import os
 import time
 
 from global_variable import *
-from start_client import sendMessageTopic
-from forensic_function.global_function import *
+from start_client_linux import sendMessageTopic
+from Forensic_function.global_function import *
 
 def get_directory():
     global disk

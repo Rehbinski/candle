@@ -8,7 +8,7 @@ import time
 import pika
 from pyrabbit.api import Client
 
-from pika_funktion.function_Worker import *
+from Pika_funktion.function_Worker import *
 
 
 

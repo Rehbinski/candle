@@ -14,7 +14,7 @@ def printer(pfad):
     print('So sollte es doch sein oder etwa nicht????\n' + pfad)
 
 
-from pika_funktion.function_Worker import ConsumerThread_retry
+from Pika_funktion.function_Worker import ConsumerThread_retry
 
 import time
 

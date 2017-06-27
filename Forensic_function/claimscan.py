@@ -5,10 +5,10 @@ import os
 import time
 
 from global_variable import *
-from start_client import sendMessageTopic
+from start_client_linux import sendMessageTopic
 
 
-from forensic_function.global_function import *
+from Forensic_function.global_function import *
 
 def clamscan(data):
     directory = data.get('directory_partion')

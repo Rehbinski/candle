@@ -3,6 +3,7 @@ DATA = {
     'directory_ewf': '/home/work/NAS/Kunde/mount',
     'directory_partion_mount': '/home/work/NAS/Kunde/Partion0/mount',
     'directory_partion': '/home/work/NAS/Kunde/Partion0',
+    'laufwerksbuchstabe': 'G:\\',
     'offset': '1',
     'domain': 'Windows',
     'message': 'Dies ist die neue Data Message',

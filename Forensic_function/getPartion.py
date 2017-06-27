@@ -1,7 +1,7 @@
 import re
 
-from start_client import sendMessageTopic
-from forensic_function.global_function import *
+from start_client_linux import sendMessageTopic
+from Forensic_function.global_function import *
 from global_variable import *
 
 

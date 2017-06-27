@@ -1,5 +1,5 @@
-from pika_funktion.function_Client import _bind
-from pika_funktion.function_Client import _retrymessage
+from Pika_funktion.function_Client import _bind
+from Pika_funktion.function_Client import _retrymessage
 from global_variable import *
 
 
