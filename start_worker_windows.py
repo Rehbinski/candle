@@ -1,10 +1,10 @@
+import logging
+import sys
+import time
+
 from Forensic_function.Windows.mount import mount
 from Pika_funktion.check import Consumer
 from Pika_funktion.check import printer
-
-import time
-import sys
-import logging
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')
@@ -23,6 +23,8 @@ def main():
 
     for thread in threads:
         thread.start()
+        print('Started: ' + thread.QUEUE)
+    print('Started: all')
     unterbrechen()
 
 

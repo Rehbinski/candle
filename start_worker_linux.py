@@ -2,14 +2,12 @@ import logging
 import sys
 import time
 
-from Forensic_function.claimscan import clamscanDisk
-from Forensic_function.copyDisk import copyDisk
-from Forensic_function.getPartion import getPartion
-from Forensic_function.mount import mountDisk
-from Forensic_function.plaso import timeline
-from global_function import workerlist
-
+from Forensic_function.Linux.claimscan import clamscanDisk
+from Forensic_function.Linux.copyDisk import copyDisk
 from Forensic_function.Linux.foremost import foremostScan
+from Forensic_function.Linux.getPartion import getPartion
+from Forensic_function.Linux.mount import mountDisk
+from Forensic_function.Linux.plaso import timeline
 from Pika_funktion.check import Consumer
 from Pika_funktion.check import printer
 
@@ -37,11 +35,14 @@ def main():
     workerlist('MountDisk_Linux', 'Mount.MountDisk', mountDisk)
     workerlist('clamscannDisk', 'Programme.clamscannDisk', clamscanDisk)
     workerlist('foremostScan', 'Mount.foremost', foremostScan)
-    workerlist('foremostScan', 'Mount.timeline', timeline)
+    workerlist('timeline', 'Mount.timeline', timeline)
     workerlist('Ende', 'Ende', printer)
 
     for thread in threads:
+        # print('Starting: ' + thread.QUEUE)
         thread.start()
+        print('Started: ' + thread.QUEUE)
+    print('Started: all')
 
     unterbrechen()
 
