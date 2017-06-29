@@ -48,7 +48,7 @@ def commandListDokumentation(command, directory):
 
     # Startzzeitpunkt festhalten
     commandName = command.split()[0].lower()
-    pfad = directory + '\\' + commandName
+    pfad = directory + '\\' + commandName.split('.')[0]
     start = time.strftime("%d.%m.%Y %H:%M:%S")
 
     # Ordner anlegen
