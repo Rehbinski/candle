@@ -3,64 +3,51 @@ from Forensic_function.mount import mountDisk
 from Forensic_function.copyDisk import copyDisk
 from Forensic_function.foremost import foremostScan
 
-from Pika_funktion.function_Worker import ConsumerThread_retry
 from Pika_funktion.check import Consumer
+from Pika_funktion.check import printer
+from Forensic_function.getPartion import getPartion
+from Forensic_function.plaso import timeline
+from global_function import workerlist
+
 import time
 import sys
 import logging
-from Pika_funktion.check import printer
-from Forensic_function.getPartion import getPartion
+
+# Konfiguration zum starten
+retries = 2
+threads = []
+pcangaben = '.Linux.PC1.thread'
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')
 LOGGER = logging.getLogger(__name__)
 
 
+# Queuenamen namen hochzahelen wenn 2 die gleiche arbeit machen sollen
+# t = Consumer(1, 'clamscannDisk'+str(i), 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
+# Queuenamen gleich lassen wenn mehrere Anfragen kommen koennen und diese Parallel bearbeitet werden sollen
+
+
 def main():
     #logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
-    threads = []
-# Erster Arbeiter - copy Disk
+    global threads
 
-    for i in range(1):
-        t = Consumer(1, 'Copydisk', 'Copy.Copydisk.Linux.PC1.thread' + str(i), copyDisk)
-        t.daemon = True
-        threads.append(t)
-
-# Zweiter Arbeiter - mount Disk
-    for i in range(1):
-        t = Consumer(2, 'Ewfmount', 'Mount.Ewfmount.Linux.PC1.thread' + str(i), getPartion)
-        t.daemon = True
-        threads.append(t)
-
-# Dritter Arbeiter - mount Disk
-        for i in range(1):
-            t = Consumer(2, 'MountDisk', 'Mount.MountDisk.Linux.PC1.thread' + str(i), mountDisk)
-            t.daemon = True
-            threads.append(t)
-
-# Vierter Arbeiter - mount Disk
-    for i in range(1):
-        #Queuenamen namen hochzahelen wenn 2 die gleiche arbeit machen sollen
-        #t = Consumer(1, 'clamscannDisk'+str(i), 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
-        #Queuenamen gleich lassen wenn mehrere Anfragen kommen koennen und diese Parallel bearbeitet werden sollen
-        t = Consumer(1, 'clamscannDisk', 'Programme.clamscannDisk.Linux.PC1.thread' + str(i), clamscanDisk)
-        t.daemon = True
-        threads.append(t)
-# Fuenfter Arbeiter - mount Disk
-    for i in range(1):
-        t = Consumer(2, 'MountDisk', 'Programme.foremost.Linux.PC1.thread' + str(i), foremostScan)
-        t.daemon = True
-        threads.append(t)
-
-# Ende Arbeiter - mount Disk
-        for i in range(1):
-            t = Consumer(1, 'End'+str(i), 'Ende', printer)
-            t.daemon = True
-            threads.append(t)
+    workerlist('Copydisk', 'Copy.Copydisk', copyDisk)
+    workerlist('Ewfmount', 'Mount.Ewfmount', getPartion)
+    workerlist('MountDisk_Linux', 'Mount.MountDisk', mountDisk)
+    workerlist('clamscannDisk', 'Programme.clamscannDisk', clamscanDisk)
+    workerlist('foremostScan', 'Mount.foremost', foremostScan)
+    workerlist('foremostScan', 'Mount.timeline', timeline)
+    workerlist('Ende', 'Ende', printer)
 
     for thread in threads:
         thread.start()
 
+    unterbrechen()
+
+
+def unterbrechen():
+    global threads
     while len(threads) > 0:
         try:
             time.sleep(1)
@@ -71,6 +58,19 @@ def main():
                 except:
                     print('Fehler: ' + str(sys.exc_info()[0]))
             break
+
+
+def workerlist(queue, routing_key, function, retriesFunction=1, anzahlWorker=1, doppelt=False):
+    # Trigger koennte von Mount kommen
+    global threads
+    for i in range(anzahlWorker):
+        info = ''
+        if doppelt:
+            info = str(i)
+        consumer = Consumer(retriesFunction, queue + info, routing_key + pcangaben, function)
+        consumer.daemon = True
+        threads.append(consumer)
+
 
 
 if __name__ == "__main__":
