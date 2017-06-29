@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import logging
-import threading
-import sys
 import json
+import logging
+import sys
+import threading
 import time
-import datetime
-
 
 import pika
-from Forensic_function.claimscan import clamscanDisk
-from start_client_linux import sendMessageTopic
 
+from start_client_linux import sendMessageTopic
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) '
               '-35s %(lineno) -5d: %(message)s')

@@ -1,17 +1,17 @@
-from Forensic_function.claimscan import clamscanDisk
-from Forensic_function.mount import mountDisk
-from Forensic_function.copyDisk import copyDisk
-from Forensic_function.foremost import foremostScan
+import logging
+import sys
+import time
 
-from Pika_funktion.check import Consumer
-from Pika_funktion.check import printer
+from Forensic_function.claimscan import clamscanDisk
+from Forensic_function.copyDisk import copyDisk
 from Forensic_function.getPartion import getPartion
+from Forensic_function.mount import mountDisk
 from Forensic_function.plaso import timeline
 from global_function import workerlist
 
-import time
-import sys
-import logging
+from Forensic_function.Linux.foremost import foremostScan
+from Pika_funktion.check import Consumer
+from Pika_funktion.check import printer
 
 # Konfiguration zum starten
 retries = 2
