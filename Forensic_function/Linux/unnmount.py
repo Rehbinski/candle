@@ -1,11 +1,9 @@
-import subprocess
 import re
-import os
-import time
-
-# from start_client_linux import sendMessageTopic
 
 from Forensic_function.global_function import *
+
+
+# from start_client_linux import sendMessageTopic
 # 3 mal austauschen
 
 def ewfmount(directory):
