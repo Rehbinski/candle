@@ -1,5 +1,5 @@
-import subprocess
 import os
+import subprocess
 import time
 
 sudo_command = 'echo password | sudo -S '
@@ -12,13 +12,13 @@ def comandList(command):
             str = i.decode('UTF-8')
             list.append(str)
             #Zum Debugen print anmachen
-            print(str)
+            # print(str)
         except:
             try:
                 str = i.decode('ISO-8859-1')
                 list.append(str)
                 #Zum Debugen print anmachen
-                print(str)
+                # print(str)
             except:
                 pass
 
@@ -54,5 +54,5 @@ def commandListSudoDokumentation(command, directory):
     fh.write('\n\n')
     fh.writelines(list)
     fh.write('---------------------- END PROGRAMM ----------------------\n\n')
-    fh.close
+    fh.close()
     return list

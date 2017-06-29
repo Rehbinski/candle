@@ -4,12 +4,14 @@ import time
 
 from Forensic_function.Linux.claimscan import clamscanDisk
 from Forensic_function.Linux.copyDisk import copyDisk
+from Forensic_function.Linux.ewfmount import getEwf
 from Forensic_function.Linux.foremost import foremostScan
 from Forensic_function.Linux.getPartion import getPartion
 from Forensic_function.Linux.mount import mountDisk
 from Forensic_function.Linux.plaso import timeline
 from Pika_funktion.check import Consumer
 from Pika_funktion.check import printer
+from global_variable import *
 
 # Konfiguration zum starten
 retries = 2
@@ -30,12 +32,19 @@ def main():
     #logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
     global threads
 
-    workerlist('Copydisk', 'Copy.Copydisk', copyDisk)
-    workerlist('Ewfmount', 'Mount.Ewfmount', getPartion)
-    workerlist('MountDisk_Linux', 'Mount.MountDisk', mountDisk)
-    workerlist('clamscannDisk', 'Programme.clamscannDisk', clamscanDisk)
-    workerlist('foremostScan', 'Mount.foremost', foremostScan)
-    workerlist('timeline', 'Mount.timeline', timeline)
+    workerlist('Copydisk', routingkeysVorbedingung.get('Copydisk'), copyDisk)
+
+    workerlist('Ewfmount', routingkeysVorbedingung.get('Eefmount'), getEwf)
+    workerlist('Partition', routingkeysVorbedingung.get('Partition'), getPartion)
+    workerlist('MountDisk_Linux', routingkeysVorbedingung.get('MountDisk_Linux'), mountDisk)
+
+    workerlist('Foremostscan', routingkeysVorbedingung.get('Foremostscan'), foremostScan)
+    workerlist('Timeline', routingkeysVorbedingung.get('Timeline'), timeline)
+
+    workerlist('Clamscanndisk', routingkeysVorbedingung.get('Clamscanndisk'), clamscanDisk)
+
+
+
     workerlist('Ende', 'Ende', printer)
 
     for thread in threads:

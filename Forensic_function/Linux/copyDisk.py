@@ -1,12 +1,11 @@
-import subprocess
-import psutil
 import re
-import os
-import time
 
+import psutil
+
+from Forensic_function.global_function import *
 from global_variable import *
 from start_client_linux import sendMessageTopic
-from Forensic_function.global_function import *
+
 
 def get_directory():
     global disk
@@ -36,15 +35,12 @@ def ewfacquire(destination, directory):
     target = directory + '/image'
     command = 'ewfacquire ' + destination + ' -t ' + target + '/image' + ' -u'
 
-    #sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
     list = commandListSudoDokumentation(command,directory)
 
-    for i in list:
-        str = i         #.decode("UTF-8")
-        #if str.find('SUCCESS') > 0:
-        #    success = True
-        if str.find('calculated') > 0:
-            checksum = str.rsplit(None, 1)[-1]
+    checksum = ''
+    for string in list:
+        if string.find('calculated') > 0:
+            checksum = string.rsplit(None, 1)[-1]
     return checksum
 
 def copyDisk(data):
@@ -73,10 +69,9 @@ def copyDisk(data):
             break
     print('erster Schritt fertig')
 
-    routing_key = 'Mount.Ewfmount'  # Nach welchen Kritereien zu Warteschlange geroutet wird
+    routing_key = routingkeysNachbedingung.get('Copydisk')  # Nach welchen Kritereien zu Warteschlange geroutet wird
     sendMessageTopic(routing_key,data)
     sendMessageTopic('Ende',data)
-
 
 
 if __name__ == "__main__" :

@@ -18,7 +18,7 @@ pcangaben = '.Windows.PC2.thread'
 def main():
     #logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
     global threads
-    workerlist('MountDisk', 'Mount.MountDisk', mount)
+    workerlist('MountDisk', 'Programme_EWF.MountDisk', mount)
     workerlist('Ende', 'Ende', printer)
 
     for thread in threads:

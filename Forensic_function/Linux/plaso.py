@@ -1,14 +1,9 @@
 #clamscan /home/work/NAS/usb -r -i --move=/home/work/NAS/clamscan
 
-import subprocess
-import os
-import time
-
+from Forensic_function.global_function import *
 from global_variable import *
 from start_client_linux import sendMessageTopic
 
-
-from Forensic_function.global_function import *
 
 def log2timeline(data):
     directory_image = data.get('directory_root') + '/image/image.E01'
@@ -44,7 +39,7 @@ def timeline(data):
 
     print('sechser Schritt fertig')
 
-    routing_key = 'Ende'  # Nach welchen Kritereien zu Warteschlange geroutet wird
+    routing_key = routingkeysNachbedingung.get('Timeline')  # Nach welchen Kritereien zu Warteschlange geroutet wird
     # Wird Nachricht benötigt???
     sendMessageTopic(routing_key, data)
 
