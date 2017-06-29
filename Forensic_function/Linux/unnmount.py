@@ -1,14 +1,19 @@
 from Forensic_function.global_function import *
+from global_variable import *
 
 
-# from start_client_linux import sendMessageTopic
-# 3 mal austauschen
-
-def umount(directory):
+def umount_partition(data):
+    directory = data.get('directory_partion') + '/' + data.get('directory_partion').split('/')[-1]
     command = 'echo password | sudo -S ' + "umount " + directory
     comandList(command)
 
-def unmount_losetup(directory):
+
+def umount_ewf(data):
+    directory = data.get('directory_ewf')
+    command = 'echo password | sudo -S ' + "umount " + directory
+    comandList(command)
+
+    # def unmount_losetup(directory):
     #losetup -d / dev/loop0
     command = "losetup -d " + directory
     command = 'echo password | sudo -S ' + command
@@ -19,17 +24,19 @@ def unmount_losetup(directory):
         print(a)
 
 if __name__ == "__main__" :
+    data = DATA
 
-    directory = '/home/work/NAS/Kunde'
+    directory = data.get('directory_root')
     target = '/dev/loop0'
     i = 1
 
 #unmounten
-    if i ==1 :
-        for i in range(4):
-            i = str(i)
-            umount(directory + '/Partion'+i+'/Partion'+i)
-            unmount_losetup(target)
-            umount(directory+'/mount/')
+    for i in range(4):
+        i = str(i)
+        partition = '/Partition' + i
+        data['directory_partion'] = directory + partition
+        umount_partition(data)
+        # unmount_losetup(target)
+    umount_ewf(data)
 
     print('zweiter Schritt fertig')
