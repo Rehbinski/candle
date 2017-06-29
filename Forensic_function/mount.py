@@ -22,6 +22,7 @@ def mount(data):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+#mount /home/work/NAS/Kunde/mount/ewf1 /home/work/NAS/Kunde/Partion1/Partion1 -o loop,ro,show_sys_files,offset=1044610560,sizelimit=2056319488 -t auto
     command = 'mount ' + target + ' ' + directory + ' -o loop,ro,show_sys_files,offset=' + str(offset) + ',sizelimit=' + str(sizelimit)
     command = 'echo password | sudo -S ' + command
     sudo = subprocess.Popen(command,shell=True, stdout=subprocess.PIPE)
