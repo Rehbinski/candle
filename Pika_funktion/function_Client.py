@@ -1,7 +1,8 @@
-import time
-import pika
 import datetime
 import json
+import time
+
+import pika
 
 
 def _retrymessage(channel,anzahl,exchange,severity,prio, data):
@@ -26,6 +27,7 @@ def _retrymessage(channel,anzahl,exchange,severity,prio, data):
             'sizelimit' : data.get('sizelimit'),
             'created': int(timestamp),
             'expire': expire,
+            'ip': data.get('ip')
         }
         channel.basic_publish(
             exchange=exchange,

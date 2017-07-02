@@ -13,6 +13,7 @@ DATA = {
     'domain': 'Windows',
     'message': 'Dies ist die neue Data Message',
     'priority' : 0,
+    'ip': ''
 
 }
 
@@ -30,7 +31,7 @@ routingkeysNachbedingung = {
     'Ewfmount': 'Programme_EWF',
     'Partition': 'Partition.MountDisk',
     'Mountdisklinux': 'Programme',
-    'ForemostScan': 'Ende',
+    'Foremostscan': 'Ende',
     'Timeline': 'Ende',
     'ClamscannDisk': 'Ende'
 }
@@ -39,7 +40,7 @@ routingkeysVorbedingung = {
     'Ewfmount': routingkeysNachbedingung.get('Copydisk'),
     'Partition': routingkeysNachbedingung.get('Ewfmount') + '.Partition',
     'MountDisk_Linux': routingkeysNachbedingung.get('Partition'),
-    'ForemostScan': routingkeysNachbedingung.get('Ewfmount') + '.foremost',
+    'Foremostscan': routingkeysNachbedingung.get('Ewfmount') + '.foremost',
     'Timeline': routingkeysNachbedingung.get('Ewfmount') + '.timeline',
-    'ClamscannDisk': routingkeysNachbedingung.get('Mountdisklinux') + '.clamscannDisk',
+    'Clamscanndisk': routingkeysNachbedingung.get('Mountdisklinux') + '.clamscannDisk',
 }

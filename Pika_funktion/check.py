@@ -286,7 +286,9 @@ class Consumer(threading.Thread):
         else:
             try:
                 print(self.name + "[+] Start: " + self.QUEUE)
-                self.MAINFUNCTION(data)
+
+                self.MAINFUNCTION(data)  # Hauptfunktion!!!!!!!!!!!!!!!!!!!!!!
+
                 #properties.priority = 0
                 print (self.name+"[+] Done: " + self.QUEUE)
             except:

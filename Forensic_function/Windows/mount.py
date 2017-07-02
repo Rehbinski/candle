@@ -1,6 +1,6 @@
+from Forensic_function.Windows.global_function import commandListDokumentation
 from Forensic_function.Windows.global_function import convert_path
 from global_variable import *
-from Forensic_function.Windows.global_function import commandListDokumentation
 from start_client_linux import sendMessageTopic
 
 
@@ -35,7 +35,6 @@ def mount(data):
     print('jaa so gehts')
 
 
-import admin
 
 if __name__ == "__main__":
     mount(DATA)

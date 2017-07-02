@@ -25,13 +25,11 @@ if __name__ == "__main__":
 # Ziel fuer zum Speichern
 
 
+
 # Variablen für Nachricht belegen senden topic
 # Erster Arbeiter - copy Disk
     routing_key = 'Copy.Copydisk'                                   #Sollte Reichen
-    #routing_key = 'Mount.Ewfmount'
-    #routing_key = 'Mount.Ewfmount'
-    exchange = 'topic_logs'                             # Wie man mag
-    type = 'topic'                                      # Type auf welche Art der Worker hört
+
 # Wird Nachricht benötigt???
     prio = 0                                            # Priorität festlegen
     sendMessageTopic(routing_key, DATA)
